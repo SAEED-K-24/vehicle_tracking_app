@@ -32,6 +32,7 @@ dependencies:
   google_fonts: ^4.0.0
   intl: ^0.18.1
   latlong2: ^0.9.1
+#  location: ^6.0.2
   shared_preferences: ^2.2.3
   splash_screen_view: ^3.0.0
   uuid: ^4.2.1

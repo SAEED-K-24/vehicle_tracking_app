@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+// import 'package:location/location.dart' as location;
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:vehicle_tracking/extensions/extensions.dart';
@@ -17,9 +18,13 @@ part 'vehicle_state.dart';
 class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
   late TripRepository _tripRepository;
   late StreamSubscription _getPositionSubscription;
+  // late location.Location _location;
+
 
   VehicleBloc() : super(VehicleInitial()) {
     _tripRepository = TripRepository();
+    // _location = new location.Location();
+    // _location.enableBackgroundMode(enable: true);
 
     on<StartTrip>((event, emit)async {
       emit(VehicleLoading());
@@ -37,12 +42,25 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
         route.add(Location(latitude: newPosition.latitude,longitude: newPosition.longitude,timestamp: DateTime.now()));
         trip = trip.copyWith(route: route);
         if(await FirestoreRepo.firestoreRepo.isDuplicateUniqueName("${trip.id}", "Trips")){
-          _tripRepository.updateTrip(trip,event.driverId);
+         await _tripRepository.updateTrip(trip,event.driverId);
         }else{
-          _tripRepository.addTrip(trip,event.driverId);
+         await _tripRepository.addTrip(trip,event.driverId);
         }
         add(UpdateLocation(trip));
       });
+
+      // _location.onLocationChanged.listen((location.LocationData currentLocation) async{
+      //   // Use current location
+      //     List<Location> route = trip.route ?? [];
+      //     route.add(Location(latitude: currentLocation.latitude!,longitude: currentLocation.longitude!,timestamp: DateTime.now()));
+      //     trip = trip.copyWith(route: route);
+      //     if(await FirestoreRepo.firestoreRepo.isDuplicateUniqueName("${trip.id}", "Trips")){
+      //      await _tripRepository.updateTrip(trip,event.driverId);
+      //     }else{
+      //      await _tripRepository.addTrip(trip,event.driverId);
+      //     }
+      //     add(UpdateLocation(trip));
+      // });
 
 
     });
