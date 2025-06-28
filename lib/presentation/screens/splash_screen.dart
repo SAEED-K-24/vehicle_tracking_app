@@ -19,7 +19,6 @@ class _SplashScreenState extends State<SplashScreen> {
   String? password;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _checkSignInSave();
   }
@@ -27,9 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
   _checkSignInSave(){
      email =  CacheHelper.getEmail();
      password =  CacheHelper.getPassword();
-    if(email == null || password == null){
-    _isSaveSignIn = false;
-    }else if(email == '' || password == ''){
+    if(email == null || password == null|| email == '' || password == '') {
       _isSaveSignIn = false;
     }
     else{
@@ -41,7 +38,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
       return Scaffold(
         body: SplashScreenView(
-          // navigateRoute: const LanguageScreen(),
           navigateRoute:_isSaveSignIn ? LoginPage(email:email ,password: password,): ChooseSignScreen(),
           duration: 5000,
           imageSize: 250,
